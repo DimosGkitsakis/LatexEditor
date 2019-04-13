@@ -16,15 +16,15 @@ public class DocumentFactory {
 		// TODO  document.setAuthor(orisma);
 		// TODO  document.setCopyright(orisma);
 		if (type.equals("article")){
-			return article.setArticle("author", date, "copyright");
+			return article.setArticle(date);
 		}else if (type.equals("report")){
-			return report.setReport("author", date, "copyright");
+			return report.setReport(date);
 		}else if (type.equals("book")){
-			return book.setBook("author", date, "copyright");
+			return book.setBook(date);
 		}else if (type.equals("letter")){
-			return letter.setLetter("author", date, "copyright");
+			return letter.setLetter(date);
 		}else{
-			return empty.setEmpty("author", date, "copyright");
+			return empty.setEmpty(date);
 		}
 	}
 }

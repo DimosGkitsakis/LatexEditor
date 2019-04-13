@@ -47,14 +47,26 @@ public class Document {
 		this.copyright=copyright;
 	}
 
+	
+	
+	
 	//TEST GIA PRINT
 	public void printContents() {
 		for(String i: contents) {
 			System.out.println(i);
 		}
+		System.out.println(author);
+		System.out.println(copyright);
+		System.out.println(date);
+		System.out.println(versionID);
+
 	}
 	
-	
+	public void test() {
+		System.out.println(author);
+		System.out.println(copyright);
+	}
+		
 	public void save(){
 		//TODO
 	}

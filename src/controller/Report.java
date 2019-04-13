@@ -4,13 +4,10 @@ import java.util.ArrayList;
 
 public class Report extends Document{
 	
-	public Document setReport(String author, String date, String copyright){
-		this.author=author;
+	public Document setReport(String date){
 		this.date=date;
-		this.copyright=copyright;
 		versionID=3;
 		setReportContents();
-		
 		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new ArrayList(this.contents));
 	}
 
