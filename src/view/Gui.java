@@ -18,7 +18,13 @@ public class Gui extends JFrame{
 	private JTextArea field;
 	Controller controller = new Controller();
 	protected ArrayList<String> contents = new ArrayList<String>();
-	
+	private JButton Article;
+	private JButton Report;
+	private JButton Book;
+	private JButton Letter;
+	private JButton Empty;
+	private Action action;
+	private JButton Chapter;
 	
 	public Gui(){
 		super("Power Rangers LaTeX Editor");
@@ -28,60 +34,52 @@ public class Gui extends JFrame{
 		New = new JButton("New Document");
 		add(New);
 		
+		//actions and new document buttons
+		action = new Action();
+		New.addActionListener(action);
+		Article = new JButton("Article");
+		Report = new JButton("Report");
+		Book = new JButton("Book");
+		Letter = new JButton("Letter");
+		Empty = new JButton("<Empty>");
+		
+		//Command buttons
+
+		Chapter = new JButton("Add Chapter");
+		add(Chapter);
+		ChapterAction chapterAction = new ChapterAction();
+		Chapter.addActionListener(chapterAction);
+
+		ArticleAction articleAction = new ArticleAction();
+		Article.addActionListener(articleAction);
+		BookAction bookAction = new BookAction();
+		Book.addActionListener(bookAction);
+		ReportAction reportAction = new ReportAction();
+		Report.addActionListener(reportAction);
+		LetterAction letterAction = new LetterAction();
+		Letter.addActionListener(letterAction);
+		EmptyAction emptyAction = new EmptyAction();
+		Empty.addActionListener(emptyAction);
+
+		//text area 
 		field = new JTextArea(80,80);
+		
 		//field.insert("Kwstas dsad", 2);
 		add(field);
 		
-
-		Action action = new Action();
-		New.addActionListener(action);
-		System.out.print("msaiodjmasd");
-		controller.print();
-		/*contents=controller.getContents();
-		field.append(contents.get(0));
-		System.out.println(contents.size());
-		for(int i=0; i<contents.size();i++) {
-			System.out.print("hi");
-			System.out.println(contents.get(i));
-			field.append(contents.get(i));
-		}*/
 		
-		//isws kanei update
-        new Thread(workRunner).start();
-        SwingUtilities.updateComponentTreeUI(this);
 
 
+	}	
+	
+	private class ChapterAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			System.out.println(field.getCaretPosition());
+			field.insert("\n\\chapter\n", field.getCaretPosition());
+		}
+	
 	}
-	
-	//https://community.oracle.com/thread/2083968
-	
-	//anti gia append, set
-	//kai sunarthsh pou enhmerwnei ta contents an einai diaforetika apo ta yparxo
-	
-    Runnable workRunner = new Runnable() {
-        public void run() {
-        	while(true) {
-                field.append("geia");
-                field.append("\n");
-                /*NA TO DIORTHWSW  provlima sto settext sthn for
-                 contents=controller.getContents();
-        		//field.append(contents.get(0));
-        		System.out.println(contents.size());
-        		for(int i=0; i<contents.size();i++) {
-        			System.out.println(contents.get(i));
-        			field.setText(contents.get(i));
-                 */
-                try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-        	}
-        }
-    };
-	
-	
 	
 	private class Action implements ActionListener{
 
@@ -89,47 +87,37 @@ public class Gui extends JFrame{
 	        //JFrame newDocumentFrame = new JFrame();
 			newDocumentFrame.setDefaultCloseOperation(newDocumentFrame.DISPOSE_ON_CLOSE);
 			newDocumentFrame.setLayout(new FlowLayout());
-			JButton Article = new JButton("Article");
-			JButton Book = new JButton("Book");
-			JButton Report = new JButton("Report");
-			JButton Letter = new JButton("Letter");
-			JButton Empty = new JButton("<Empty>");
+			newDocumentFrame.setSize(250, 250);
+			newDocumentFrame.setVisible(true);
+			
+
 			newDocumentFrame.add(Article);
 			newDocumentFrame.add(Book);
 			newDocumentFrame.add(Report);
 			newDocumentFrame.add(Letter);
 			newDocumentFrame.add(Empty);
-			newDocumentFrame.setSize(250, 250);
-			newDocumentFrame.setVisible(true);
 
-			
-			
 			//actions
-			ArticleAction articleAction = new ArticleAction();
-			Article.addActionListener(articleAction);
-			BookAction bookAction = new BookAction();
-			Book.addActionListener(bookAction);
-			ReportAction reportAction = new ReportAction();
-			Report.addActionListener(reportAction);
-			LetterAction letterAction = new LetterAction();
-			Letter.addActionListener(letterAction);
-			EmptyAction emptyAction = new EmptyAction();
-			Empty.addActionListener(emptyAction);
 
 		}
 		
-		
+	}	
 		//Action for Article
 		private class ArticleAction implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				controller.setType("article");
 				controller.factoryMethod();
+
 				String author = JOptionPane.showInputDialog("Enter author name: ");
 				String copyright = JOptionPane.showInputDialog("Enter copyrights: ");
 
 				controller.setAuthor(author);
-				controller.setCopyright(copyright);		
+				controller.setCopyright(copyright);
+
+				//field.selectAll();
+				field.setText(controller.getStringContents());
+				
 				newDocumentFrame.dispose();
 			}
 			
@@ -145,7 +133,9 @@ public class Gui extends JFrame{
 				String copyright = JOptionPane.showInputDialog("Enter copyrights: ");
 
 				controller.setAuthor(author);
-				controller.setCopyright(copyright);				
+				controller.setCopyright(copyright);	
+				
+				field.setText(controller.getStringContents());
 
 				newDocumentFrame.dispose();
 
@@ -163,8 +153,9 @@ public class Gui extends JFrame{
 				String copyright = JOptionPane.showInputDialog("Enter copyrights: ");
 
 				controller.setAuthor(author);
-				controller.setCopyright(copyright);				
-				controller.print(); //print gia tests
+				controller.setCopyright(copyright);	
+				
+				field.setText(controller.getStringContents());
 				
 				newDocumentFrame.dispose();
 
@@ -182,7 +173,10 @@ public class Gui extends JFrame{
 				String copyright = JOptionPane.showInputDialog("Enter copyrights: ");
 
 				controller.setAuthor(author);
-				controller.setCopyright(copyright);				
+				controller.setCopyright(copyright);	
+				
+				field.setText(controller.getStringContents());
+				
 				newDocumentFrame.dispose();
 
 			}
@@ -199,7 +193,10 @@ public class Gui extends JFrame{
 				String copyright = JOptionPane.showInputDialog("Enter copyrights: ");
 
 				controller.setAuthor(author);
-				controller.setCopyright(copyright);				
+				controller.setCopyright(copyright);
+
+				field.setText(controller.getStringContents());
+
 				newDocumentFrame.dispose();
 
 			}
@@ -207,7 +204,7 @@ public class Gui extends JFrame{
 		}
 
 		
-	}	
+
 	
 	public static void main(String[] args) {
 		Gui g = new Gui();

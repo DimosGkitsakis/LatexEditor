@@ -40,4 +40,8 @@ public class Controller {
 		return document.getContents();
 	}
 	
+	public String getStringContents() {
+		return document.getStringContents();
+	}
+		
 }

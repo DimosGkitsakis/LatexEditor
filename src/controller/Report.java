@@ -6,7 +6,7 @@ public class Report extends Document{
 	
 	public Document setReport(String date){
 		this.date=date;
-		versionID=3;
+		versionID=0;
 		setReportContents();
 		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new ArrayList(this.contents));
 	}

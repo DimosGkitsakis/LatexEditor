@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Article extends Document {
 	
 	public Document setArticle(String date){
+		clear();
 		this.date=date;
 		versionID=0;
 		setArticleContents();

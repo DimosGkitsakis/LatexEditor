@@ -13,7 +13,11 @@ public class Document {
 	protected ArrayList<String> contents = new ArrayList<String>();
 	
 	public Document(){
-		//default construtor
+		type = " ";
+		author = " ";
+		date = " ";
+		copyright = " ";
+		versionID = 0;
 	}
 	
 	
@@ -24,6 +28,15 @@ public class Document {
 		this.copyright=copyright;
 		this.versionID=versionID;
 		this.contents=contents;
+	}
+	
+	public void clear() {
+		type = " ";
+		author = " ";
+		date = " ";
+		copyright = " ";
+		contents.clear();
+		versionID = 0;
 	}
 
 	
@@ -47,7 +60,13 @@ public class Document {
 		this.copyright=copyright;
 	}
 
-	
+	public String getStringContents() {
+		String cont = "";
+		for(int i=0; i<contents.size(); i++) {
+			cont += contents.get(i);
+		}
+		return cont;
+	}
 	
 	
 	//TEST GIA PRINT
@@ -59,6 +78,7 @@ public class Document {
 		System.out.println(copyright);
 		System.out.println(date);
 		System.out.println(versionID);
+		System.out.println(type);
 
 	}
 	
