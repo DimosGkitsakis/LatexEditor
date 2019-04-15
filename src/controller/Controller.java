@@ -36,12 +36,25 @@ public class Controller {
 		document.test();
 	}
 	
-	public ArrayList getContents() {
+	public String getContents() {
 		return document.getContents();
 	}
 	
-	public String getStringContents() {
+	/*public String getStringContents() {
 		return document.getStringContents();
+	}*/
+
+	public String getType() {
+		return document.getType();
+	}
+
+	public String getAuthor() {
+		return document.getAuthor();
+	}
+
+	public void setContents(String text) {
+		document.setContents(text);
+		
 	}
 		
 }

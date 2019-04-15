@@ -25,6 +25,14 @@ public class Gui extends JFrame{
 	private JButton Empty;
 	private Action action;
 	private JButton Chapter;
+	private JButton Section;
+	private JButton Subsection;
+	private JButton Subsubsection;
+	private JButton Itemize;
+	private JButton Enumerate;
+	private JButton Table;
+	private JButton Figure;
+	
 	
 	public Gui(){
 		super("Power Rangers LaTeX Editor");
@@ -44,12 +52,56 @@ public class Gui extends JFrame{
 		Empty = new JButton("<Empty>");
 		
 		//Command buttons
-
+			//Chapter
 		Chapter = new JButton("Add Chapter");
 		add(Chapter);
 		ChapterAction chapterAction = new ChapterAction();
 		Chapter.addActionListener(chapterAction);
-
+			
+			//Section
+		Section = new JButton("Add Section");
+		add(Section);
+		SectionAction sectionAction = new SectionAction();
+		Section.addActionListener(sectionAction);
+		
+			//Subsection
+		Subsection = new JButton("Add Subsection");
+		add(Subsection);
+		SubsectionAction subsectionAction = new SubsectionAction();
+		Subsection.addActionListener(subsectionAction);
+		
+			//Subsubsection
+		Subsubsection = new JButton("Add Subsubsection");
+		add(Subsubsection);
+		SubsubsectionAction subsubsectionAction = new SubsubsectionAction();
+		Subsubsection.addActionListener(subsubsectionAction);
+		
+			//Itemize
+		Itemize = new JButton("Add Itemize List");
+		add(Itemize);
+		ItemizeAction itemizeAction = new ItemizeAction();
+		Itemize.addActionListener(itemizeAction);
+		
+			//Enumerate
+		Enumerate = new JButton("Add Enumeration List");
+		add(Enumerate);
+		EnumerateAction enumerateAction = new EnumerateAction();
+		Enumerate.addActionListener(enumerateAction);
+		
+			//Table
+		Table = new JButton("Add Table");
+		add(Table);
+		TableAction tableAction = new TableAction();
+		Table.addActionListener(tableAction);
+		
+			//Figure
+		Figure = new JButton("Add Figure");
+		add(Figure);
+		FigureAction figureAction = new FigureAction();
+		Figure.addActionListener(figureAction);
+		
+		
+		
 		ArticleAction articleAction = new ArticleAction();
 		Article.addActionListener(articleAction);
 		BookAction bookAction = new BookAction();
@@ -60,7 +112,8 @@ public class Gui extends JFrame{
 		Letter.addActionListener(letterAction);
 		EmptyAction emptyAction = new EmptyAction();
 		Empty.addActionListener(emptyAction);
-
+		
+		
 		//text area 
 		field = new JTextArea(80,80);
 		
@@ -75,10 +128,114 @@ public class Gui extends JFrame{
 	private class ChapterAction implements ActionListener{
 
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(field.getCaretPosition());
-			field.insert("\n\\chapter\n", field.getCaretPosition());
+
+			if(controller.getType().equals("letter") || controller.getType().equals("article")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\chapter{ }", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
 		}
+	}
 	
+	private class SectionAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\section{ }", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
+	}
+	
+	private class SubsectionAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\subsection{ }", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
+	}
+	
+	private class SubsubsectionAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\subsubsection{ }", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
+	}
+	
+	private class ItemizeAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\begin{itemize}\n" + "\\item ...\n" + "\\item ...\n" + "\\end{itemize}", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
+	}
+	
+	private class EnumerateAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\begin{enumerate}\n" + "\\item ...\n" + "\\item ...\n" + "\\end{enumerate}", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
+	}
+	
+	private class TableAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\begin{table}\n" + "\\caption{....}\\label{...}\n" + "\\begin{tabular}{|c|c|c|}\n" + " \\hline\n" + "... &...&...\\\\\n" + 
+						"... &...&...\\\\\n" + "... &...&...\\\\\n" + " \\hline\n" + "\\end{tabular}\n" + "\\end{table}", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
+	}
+	
+	private class FigureAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(controller.getType().equals("letter")) {
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+			}
+			else {
+				field.insert("\\begin{figure}\n" + "\\includegraphics[width=...,height=...]{...}\n" + "\\caption{....}\\label{...}\n" + "\\end{figure}", field.getCaretPosition());
+				controller.setContents(field.getText());
+			}
+		}
 	}
 	
 	private class Action implements ActionListener{
@@ -97,8 +254,6 @@ public class Gui extends JFrame{
 			newDocumentFrame.add(Letter);
 			newDocumentFrame.add(Empty);
 
-			//actions
-
 		}
 		
 	}	
@@ -116,7 +271,7 @@ public class Gui extends JFrame{
 				controller.setCopyright(copyright);
 
 				//field.selectAll();
-				field.setText(controller.getStringContents());
+				field.setText(controller.getContents());
 				
 				newDocumentFrame.dispose();
 			}
@@ -135,7 +290,7 @@ public class Gui extends JFrame{
 				controller.setAuthor(author);
 				controller.setCopyright(copyright);	
 				
-				field.setText(controller.getStringContents());
+				field.setText(controller.getContents());
 
 				newDocumentFrame.dispose();
 
@@ -155,7 +310,7 @@ public class Gui extends JFrame{
 				controller.setAuthor(author);
 				controller.setCopyright(copyright);	
 				
-				field.setText(controller.getStringContents());
+				field.setText(controller.getContents());
 				
 				newDocumentFrame.dispose();
 
@@ -175,7 +330,7 @@ public class Gui extends JFrame{
 				controller.setAuthor(author);
 				controller.setCopyright(copyright);	
 				
-				field.setText(controller.getStringContents());
+				field.setText(controller.getContents());
 				
 				newDocumentFrame.dispose();
 
@@ -195,7 +350,7 @@ public class Gui extends JFrame{
 				controller.setAuthor(author);
 				controller.setCopyright(copyright);
 
-				field.setText(controller.getStringContents());
+				field.setText(controller.getContents());
 
 				newDocumentFrame.dispose();
 
@@ -203,8 +358,7 @@ public class Gui extends JFrame{
 			
 		}
 
-		
-
+	
 	
 	public static void main(String[] args) {
 		Gui g = new Gui();

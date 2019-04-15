@@ -9,8 +9,8 @@ public class Document {
 	protected String date = " ";
 	protected String copyright = " ";
 	protected int versionID = 0;
-	//private String contents;
-	protected ArrayList<String> contents = new ArrayList<String>();
+	protected String contents;
+	//protected ArrayList<String> contents = new ArrayList<String>();
 	
 	public Document(){
 		type = " ";
@@ -21,7 +21,7 @@ public class Document {
 	}
 	
 	
-	public Document(String type, String author, String date, String copyright, int versionID, ArrayList contents){
+	public Document(String type, String author, String date, String copyright, int versionID, String contents){
 		this.type=type;
 		this.author=author;
 		this.date=date;
@@ -35,7 +35,7 @@ public class Document {
 		author = " ";
 		date = " ";
 		copyright = " ";
-		contents.clear();
+		contents="";
 		versionID = 0;
 	}
 
@@ -45,10 +45,16 @@ public class Document {
 	}
 	
 	public void addContents(String content){
-		contents.add(content);
+		contents = contents + content;
 	}
 	
-	public ArrayList getContents(){
+	
+	// For gui extra user contents
+	public void setContents(String content) {
+		contents = content;
+	} 
+	
+	public String getContents(){
 		return contents;
 	}
 	
@@ -60,20 +66,18 @@ public class Document {
 		this.copyright=copyright;
 	}
 
-	public String getStringContents() {
+	/*public String getStringContents() {
 		String cont = "";
 		for(int i=0; i<contents.size(); i++) {
 			cont += contents.get(i);
 		}
 		return cont;
-	}
+	}*/
 	
 	
 	//TEST GIA PRINT
 	public void printContents() {
-		for(String i: contents) {
-			System.out.println(i);
-		}
+		System.out.println(contents);
 		System.out.println(author);
 		System.out.println(copyright);
 		System.out.println(date);
@@ -98,6 +102,11 @@ public class Document {
 
 	public String getType() {
 		return type;
+	}
+
+
+	public String getAuthor() {
+		return author;
 	}
 	
 }

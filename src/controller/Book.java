@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class Book extends Document{
 	
 	public Document setBook(String date){
+		clear();
+		type = "book";
 		this.date=date;
 		versionID=0;
 		setBookContents();
-		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new ArrayList(this.contents));
+		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new String(this.contents));
 	}
 	
 	public void setBookContents(){

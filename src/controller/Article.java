@@ -6,10 +6,11 @@ public class Article extends Document {
 	
 	public Document setArticle(String date){
 		clear();
+		type = "article";
 		this.date=date;
 		versionID=0;
 		setArticleContents();
-		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new ArrayList(this.contents));
+		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new String(this.contents));
 	}
 
 	public void setArticleContents(){
