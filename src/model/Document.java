@@ -1,6 +1,4 @@
-package controller;
-
-import java.util.ArrayList;
+package model;
 
 public class Document {
 	
@@ -10,7 +8,6 @@ public class Document {
 	protected String copyright = " ";
 	protected int versionID = 0;
 	protected String contents;
-	//protected ArrayList<String> contents = new ArrayList<String>();
 	
 	public Document(){
 		type = " ";
@@ -30,6 +27,7 @@ public class Document {
 		this.contents=contents;
 	}
 	
+	//clears a Document
 	public void clear() {
 		type = " ";
 		author = " ";
@@ -38,26 +36,21 @@ public class Document {
 		contents="";
 		versionID = 0;
 	}
-
 	
+	//Add contents at the end
+	public void addContents(String content){
+		contents = contents + content;
+	}
+
+	//Setters
 	public void setType(String type) {
 		this.type=type;
 	}
 	
-	public void addContents(String content){
-		contents = contents + content;
-	}
-	
-	
-	// For gui extra user contents
 	public void setContents(String content) {
 		contents = content;
 	} 
-	
-	public String getContents(){
-		return contents;
-	}
-	
+		
 	public void setAuthor(String author){
 		this.author=author;
 	}
@@ -66,16 +59,45 @@ public class Document {
 		this.copyright=copyright;
 	}
 
-	/*public String getStringContents() {
-		String cont = "";
-		for(int i=0; i<contents.size(); i++) {
-			cont += contents.get(i);
-		}
-		return cont;
-	}*/
+	public void setDate(String parseInt) {
+		date=parseInt;
+	}
+
+
+	public void setVersionID(int parseInt) {
+		versionID=parseInt;
+	}
 	
+	//Getters
+	public String getType() {
+		return type;
+	}
+
+
+	public String getAuthor() {
+		return author;
+	}
+
+
+	public String getDate() {
+		return date;
+	}
+
+
+	public int getVersionID() {
+		return versionID;
+	}
+
+
+	public String getCopyright() {
+		return copyright;
+	}
 	
-	//TEST GIA PRINT
+	public String getContents(){
+		return contents;
+	}
+
+	//Tests with print
 	public void printContents() {
 		System.out.println(contents);
 		System.out.println(author);
@@ -90,23 +112,5 @@ public class Document {
 		System.out.println(author);
 		System.out.println(copyright);
 	}
-		
-	public void save(){
-		//TODO
-	}
-	/*
-	public Document deepCopy(){
-		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new String(this.versionID),new String(this.contents));
-	}*/
 
-
-	public String getType() {
-		return type;
-	}
-
-
-	public String getAuthor() {
-		return author;
-	}
-	
 }

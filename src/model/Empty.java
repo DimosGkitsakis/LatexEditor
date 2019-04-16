@@ -1,6 +1,4 @@
-package controller;
-
-import java.util.ArrayList;
+package model;
 
 public class Empty extends Document{
 	
@@ -10,7 +8,6 @@ public class Empty extends Document{
 		this.date=date;
 		versionID=0;
 		type="empty";
-		//Maybe contents needed
 		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new String(this.contents));
 	}
 }

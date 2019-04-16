@@ -1,6 +1,4 @@
-package controller;
-
-import java.util.ArrayList;
+package model;
 
 public class Letter extends Document{
 	

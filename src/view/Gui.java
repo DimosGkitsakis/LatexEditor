@@ -1,23 +1,24 @@
 package view;
 import controller.*;
-
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 public class Gui extends JFrame{
 	
 	private JButton New;
 	private JFrame newDocumentFrame = new JFrame();
 	private JTextArea field;
-	Controller controller = new Controller();
-	protected ArrayList<String> contents = new ArrayList<String>();
+	private Controller controller = new Controller();
 	private JButton Article;
 	private JButton Report;
 	private JButton Book;
@@ -32,16 +33,22 @@ public class Gui extends JFrame{
 	private JButton Enumerate;
 	private JButton Table;
 	private JButton Figure;
-	
-	
+	private JButton Save;
+	private JButton Load;
+
 	public Gui(){
 		super("Power Rangers LaTeX Editor");
 		
 		setLayout(new FlowLayout());
-		
 		New = new JButton("New Document");
 		add(New);
-		
+		try {
+			Image myicon = ImageIO.read(new File(System.getProperty("user.dir") + "\\src\\view\\icon.png"));
+			setIconImage(myicon);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		//actions and new document buttons
 		action = new Action();
 		New.addActionListener(action);
@@ -100,7 +107,18 @@ public class Gui extends JFrame{
 		FigureAction figureAction = new FigureAction();
 		Figure.addActionListener(figureAction);
 		
+			//Save
+		Save = new JButton("Save TeX File");
+		add(Save);
+		SaveAction saveAction = new SaveAction();
+		Save.addActionListener(saveAction);
 		
+			//Load
+		Load = new JButton("Load TeX File");
+		add(Load);
+		LoadAction loadAction = new LoadAction();
+		Load.addActionListener(loadAction);
+
 		
 		ArticleAction articleAction = new ArticleAction();
 		Article.addActionListener(articleAction);
@@ -113,24 +131,18 @@ public class Gui extends JFrame{
 		EmptyAction emptyAction = new EmptyAction();
 		Empty.addActionListener(emptyAction);
 		
-		
 		//text area 
 		field = new JTextArea(80,80);
-		
-		//field.insert("Kwstas dsad", 2);
 		add(field);
-		
-		
-
 
 	}	
-	
+		
 	private class ChapterAction implements ActionListener{
 
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter") || controller.getType().equals("article")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\chapter{ }", field.getCaretPosition());
@@ -144,7 +156,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\section{ }", field.getCaretPosition());
@@ -158,7 +170,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\subsection{ }", field.getCaretPosition());
@@ -172,7 +184,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\subsubsection{ }", field.getCaretPosition());
@@ -186,7 +198,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\begin{itemize}\n" + "\\item ...\n" + "\\item ...\n" + "\\end{itemize}", field.getCaretPosition());
@@ -200,7 +212,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\begin{enumerate}\n" + "\\item ...\n" + "\\item ...\n" + "\\end{enumerate}", field.getCaretPosition());
@@ -214,7 +226,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\begin{table}\n" + "\\caption{....}\\label{...}\n" + "\\begin{tabular}{|c|c|c|}\n" + " \\hline\n" + "... &...&...\\\\\n" + 
@@ -229,7 +241,7 @@ public class Gui extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			if(controller.getType().equals("letter")) {
-				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.PLAIN_MESSAGE);	
+				JOptionPane.showMessageDialog(null, "Not available for this type of document!", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
 				field.insert("\\begin{figure}\n" + "\\includegraphics[width=...,height=...]{...}\n" + "\\caption{....}\\label{...}\n" + "\\end{figure}", field.getCaretPosition());
@@ -238,22 +250,75 @@ public class Gui extends JFrame{
 		}
 	}
 	
+	private class SaveAction implements ActionListener{
+
+	  public void actionPerformed(ActionEvent e) {
+	        JFileChooser c = new JFileChooser();
+	        int rVal = c.showSaveDialog(Gui.this);
+	        if (rVal == JFileChooser.APPROVE_OPTION) {
+	            controller.setFileName(c.getSelectedFile().getName());
+	            controller.setFilePath(c.getCurrentDirectory().toString());
+	      		try {
+	      			controller.setContents(field.getText());
+					controller.save();
+					JOptionPane.showMessageDialog(null, "File " + c.getSelectedFile().getName() + " created succesfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+	        }
+	  }
+		
+	}
+	
+	private class LoadAction implements ActionListener{
+
+		  public void actionPerformed(ActionEvent e) {
+		        JFileChooser c = new JFileChooser();
+		        int rVal = c.showOpenDialog(Gui.this);
+		        if (rVal == JFileChooser.APPROVE_OPTION) {
+		            controller.setFileName(c.getSelectedFile().getName());
+		            String[] split = c.getSelectedFile().getName().split("\\.");
+		            String ext = split[split.length - 1];
+		            //checks if file is .tex file
+		            if(ext.equals("tex")){
+		            	//checks if file exists
+		            	File tempFile = new File(c.getCurrentDirectory() + "\\" + c.getSelectedFile().getName());
+		            	if(tempFile.exists()){
+				      		try {
+				      			//makes new clear file and calls load
+					            controller.setFilePath(c.getCurrentDirectory().toString());
+				      			controller.setType("empty");
+				      			controller.factoryMethod();
+								controller.load();
+								field.setText(controller.getContents());
+								JOptionPane.showMessageDialog(null, "File " + c.getSelectedFile().getName() + " loaded succesfully!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+		            	}else{
+							JOptionPane.showMessageDialog(null, "You can't load files that don't exist!", "Error", JOptionPane.ERROR_MESSAGE);	
+		            	}
+		            }else{
+						JOptionPane.showMessageDialog(null, "You can only load .tex files!", "Error", JOptionPane.ERROR_MESSAGE);	
+		            }
+		        }
+		  }		
+	}
+
 	private class Action implements ActionListener{
 
 		public void actionPerformed(ActionEvent e) {
-	        //JFrame newDocumentFrame = new JFrame();
 			newDocumentFrame.setDefaultCloseOperation(newDocumentFrame.DISPOSE_ON_CLOSE);
 			newDocumentFrame.setLayout(new FlowLayout());
 			newDocumentFrame.setSize(250, 250);
 			newDocumentFrame.setVisible(true);
 			
-
+			
 			newDocumentFrame.add(Article);
 			newDocumentFrame.add(Book);
 			newDocumentFrame.add(Report);
 			newDocumentFrame.add(Letter);
 			newDocumentFrame.add(Empty);
-
 		}
 		
 	}	
@@ -270,7 +335,6 @@ public class Gui extends JFrame{
 				controller.setAuthor(author);
 				controller.setCopyright(copyright);
 
-				//field.selectAll();
 				field.setText(controller.getContents());
 				
 				newDocumentFrame.dispose();
@@ -358,7 +422,6 @@ public class Gui extends JFrame{
 			
 		}
 
-	
 	
 	public static void main(String[] args) {
 		Gui g = new Gui();

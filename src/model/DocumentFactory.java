@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,9 +12,7 @@ public class DocumentFactory {
 	Letter letter = new Letter();
 	Empty empty = new Empty();
 
-	public Document factoryMethod(String type){ //isws 8elei static
-		// TODO  document.setAuthor(orisma);
-		// TODO  document.setCopyright(orisma);
+	public Document factoryMethod(String type){
 		if (type.equals("article")){
 			return article.setArticle(date);
 		}else if (type.equals("report")){

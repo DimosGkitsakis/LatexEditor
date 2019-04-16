@@ -1,34 +1,30 @@
-package controller;
+package model;
 
-import java.util.ArrayList;
-
-public class Book extends Document{
+public class Report extends Document{
 	
-	public Document setBook(String date){
+	public Document setReport(String date){
 		clear();
-		type = "book";
+		type = "report";
 		this.date=date;
 		versionID=0;
-		setBookContents();
+		setReportContents();
 		return new Document(new String(this.type), new String(this.author), new String(this.date), new String(this.copyright),new Integer(this.versionID),new String(this.contents));
 	}
-	
-	public void setBookContents(){
-		addContents("\\documentclass[11pt,a4paper]{book}\n");
+
+	public void setReportContents(){
+		addContents("\\documentclass[11pt,a4paper]{report}\n");
 		addContents("\\begin{document}\n");
 		addContents("\\title{ }\n");
 		addContents("\\author{ }\n");
 		addContents("\\date{\\today}\n");
 		addContents("\\maketitle\n");
-		addContents("\\frontmatter\n");
-		addContents("\\chapter{Preface}\n");
-		addContents("% ...\n");
-		addContents("\\mainmatter\n");
+		addContents("\\begin{abstract}\n");
+		addContents("\\end{abstract}\n");
 		addContents("\\chapter{ }\n");
 		addContents("\\section{ }\n");
+		addContents("\\chapter{ }\n");
 		addContents("\\chapter*{References}\n");
-		addContents("\\backmatter\n");
-		addContents("\\chapter{Last note}\n");
 		addContents("\\end{document}\n");
 	}
+
 }
