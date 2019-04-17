@@ -12,7 +12,7 @@ public class Save{
 	File file;
 	
 	public void saveFile(String name, String path, String contents) throws IOException {
-		file = new File(path + "\\" + name + ".tex");
+		file = new File(path + "/" + name + ".tex");
 		
 		if(!file.exists()){
 			try {
@@ -30,39 +30,76 @@ public class Save{
 	}
 	
 	public void saveInfo(String author, String date, int versionID, String copyright, String name, String path) throws IOException{
-		file = new File(path + "\\" + name + ".txt");
-		Path p = Paths.get(path + "\\" + name + ".txt");
-		
-		if(file.exists()){
-			file.delete();
-		}
-
-		if(!file.exists()){
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
+		if(System.getProperty("os.name").equals("Linux")){
+			file = new File(path + "/" + "." + name + ".txt");
+			Path p = Paths.get("." + path + "/" + "." + name + ".txt");
+			
+			if(file.exists()){
+				file.delete();
 			}
-		}
-		
-		String str="";
-		if (author.equals("")){
-			author="default";
-			str+=author + "$$" + date + "$$" + versionID + "$$";
+
+			if(!file.exists()){
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			String str="";
+			if (author.equals("")){
+				author="default";
+				str+=author + "$$" + date + "$$" + versionID + "$$";
+			}else{
+				str+=author + "$$" + date + "$$" + versionID + "$$";
+			}
+			if (copyright.equals("")){
+				copyright="default";
+				str+=copyright;
+			}else{
+				str+=copyright;
+			}
+			FileOutputStream outputStream = new FileOutputStream(file);
+			byte[] strToBytes = str.getBytes();
+			outputStream.write(strToBytes);
+			outputStream.close();
+		   // Files.setAttribute(p, "dos:hidden", true); //only works on windows :(
 		}else{
-			str+=author + "$$" + date + "$$" + versionID + "$$";
+			file = new File(path + "\\" + name + ".txt");
+			Path p = Paths.get(path + "\\" + name + ".txt");
+			
+			if(file.exists()){
+				file.delete();
+			}
+
+			if(!file.exists()){
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			String str="";
+			if (author.equals("")){
+				author="default";
+				str+=author + "$$" + date + "$$" + versionID + "$$";
+			}else{
+				str+=author + "$$" + date + "$$" + versionID + "$$";
+			}
+			if (copyright.equals("")){
+				copyright="default";
+				str+=copyright;
+			}else{
+				str+=copyright;
+			}
+			FileOutputStream outputStream = new FileOutputStream(file);
+			byte[] strToBytes = str.getBytes();
+			outputStream.write(strToBytes);
+			outputStream.close();
+		    Files.setAttribute(p, "dos:hidden", true);
+
 		}
-		if (copyright.equals("")){
-			copyright="default";
-			str+=copyright;
-		}else{
-			str+=copyright;
-		}
-		FileOutputStream outputStream = new FileOutputStream(file);
-		byte[] strToBytes = str.getBytes();
-		outputStream.write(strToBytes);
-		outputStream.close();
-	    Files.setAttribute(p, "dos:hidden", true);
 
 	}
 	

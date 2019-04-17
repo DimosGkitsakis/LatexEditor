@@ -43,7 +43,7 @@ public class Gui extends JFrame{
 		New = new JButton("New Document");
 		add(New);
 		try {
-			Image myicon = ImageIO.read(new File(System.getProperty("user.dir") + "\\src\\view\\icon.png"));
+			Image myicon = ImageIO.read(new File(System.getProperty("user.dir") + "/src/view/icon.png"));
 			setIconImage(myicon);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -258,6 +258,7 @@ public class Gui extends JFrame{
 	        if (rVal == JFileChooser.APPROVE_OPTION) {
 	            controller.setFileName(c.getSelectedFile().getName());
 	            controller.setFilePath(c.getCurrentDirectory().toString());
+	            System.out.println(c.getCurrentDirectory().toString());
 	      		try {
 	      			controller.setContents(field.getText());
 					controller.save();
@@ -282,7 +283,7 @@ public class Gui extends JFrame{
 		            //checks if file is .tex file
 		            if(ext.equals("tex")){
 		            	//checks if file exists
-		            	File tempFile = new File(c.getCurrentDirectory() + "\\" + c.getSelectedFile().getName());
+		            	File tempFile = new File(c.getCurrentDirectory() + "/" + c.getSelectedFile().getName());
 		            	if(tempFile.exists()){
 				      		try {
 				      			//makes new clear file and calls load
@@ -393,7 +394,6 @@ public class Gui extends JFrame{
 
 				controller.setAuthor(author);
 				controller.setCopyright(copyright);	
-				
 				field.setText(controller.getContents());
 				
 				newDocumentFrame.dispose();

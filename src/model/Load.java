@@ -17,7 +17,7 @@ import controller.Controller;
 public class Load {
 
 	public void loadFile(Controller controller) throws IOException {
-		File file = new File(controller.getFilePath() + "\\" + controller.getFileName()); 
+		File file = new File(controller.getFilePath() + "/" + controller.getFileName()); 
 	    Scanner sc = new Scanner(file);
 	    String line;
 	    String[] firstline;
@@ -39,8 +39,15 @@ public class Load {
 	}
 	
 	public void loadInfo(Controller controller) throws IOException {
-		File file = new File((controller.getFilePath() + "\\" + controller.getFileName()).replace(".tex",".txt"));
-		Path p = Paths.get((controller.getFilePath() + "\\" + controller.getFileName()).replace(".tex",".txt"));
+		File file;
+		Path p;
+		if(System.getProperty("os.name").equals("Linux")){
+			file = new File((controller.getFilePath() + "/" + "." + controller.getFileName()).replace(".tex",".txt"));
+			p = Paths.get((controller.getFilePath() + "/" + "." + controller.getFileName()).replace(".tex",".txt"));
+		}else{
+			file = new File((controller.getFilePath() + "/" + controller.getFileName()).replace(".tex",".txt"));
+			p = Paths.get((controller.getFilePath() + "/" + controller.getFileName()).replace(".tex",".txt"));
+		}
 
 		if (file.exists()){
 		    Scanner sc = new Scanner(file); 
@@ -61,7 +68,12 @@ public class Load {
 			String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 			String author = JOptionPane.showInputDialog("Enter author name: ");
 			String copyright = JOptionPane.showInputDialog("Enter copyrights: ");
-
+			if(author.equals("")){
+				author="default";
+			}
+			if(copyright.equals("")){
+				copyright="default";
+			}
 			controller.setAuthor(author);
 			controller.setCopyright(copyright);
 			try {
@@ -74,7 +86,9 @@ public class Load {
 			byte[] strToBytes = str.getBytes();
 			outputStream.write(strToBytes);
 			outputStream.close();
-		    Files.setAttribute(p, "dos:hidden", true);
+		}
+		if(!System.getProperty("os.name").equals("Linux")){
+			Files.setAttribute(p, "dos:hidden", true);
 		}
 	}
 
