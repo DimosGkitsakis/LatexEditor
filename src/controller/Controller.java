@@ -10,6 +10,8 @@ import java.io.IOException;
 import model.Document;
 import model.DocumentFactory;
 import model.Invoker;
+import model.VersionsStrategy;
+import model.VersionsStrategyFactory;
 
 public class Controller {
 	Document document;
@@ -17,7 +19,9 @@ public class Controller {
 	Invoker invoker;
 	String fileName;
 	String path;
-	
+	String strategyVersion;
+	VersionsStrategy strategy;
+	VersionsStrategyFactory strategyFactory;
 	public Controller(){
 		document = new Document();
 		factory = new DocumentFactory();
@@ -134,5 +138,10 @@ public class Controller {
 		invoker.issueCommand("load");
 		
 	}
-		
+	
+	public void setStrategy(String strategyVersion) {
+		strategyFactory = new VersionsStrategyFactory(strategyVersion);
+		strategy = strategyFactory.createStrategy();
+		strategy.putVersion(document);
+	}
 }

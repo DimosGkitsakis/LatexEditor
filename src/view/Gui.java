@@ -1,16 +1,26 @@
 package view;
 import controller.*;
+
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Gui extends JFrame{
@@ -18,6 +28,7 @@ public class Gui extends JFrame{
 	private JButton New;
 	private JFrame newDocumentFrame = new JFrame();
 	private JTextArea field;
+	private JScrollPane sp;
 	private Controller controller = new Controller();
 	private JButton Article;
 	private JButton Report;
@@ -35,7 +46,11 @@ public class Gui extends JFrame{
 	private JButton Figure;
 	private JButton Save;
 	private JButton Load;
-
+	private JCheckBox strategyEnabler;
+	private JMenuBar bar;
+	private JMenu menu;
+	private JRadioButtonMenuItem volatileOption;
+	private JRadioButtonMenuItem stableOption;
 	public Gui(){
 		super("Power Rangers LaTeX Editor");
 		
@@ -131,12 +146,73 @@ public class Gui extends JFrame{
 		EmptyAction emptyAction = new EmptyAction();
 		Empty.addActionListener(emptyAction);
 		
+	    ItemListener itemListener = new ItemListener() {
+	    	public void itemStateChanged(ItemEvent e) {
+	    	    Object source = e.getItemSelectable();
+
+	    	    if (source == strategyEnabler) {
+	    		    if (e.getStateChange() == ItemEvent.SELECTED) {
+	    		    	controller.setStrategy("volatile");
+	    		    	menu.setEnabled(true);
+	    		    	volatileOption.setSelected(true);
+	    		    	System.out.println("Hiiiii"); //controller.enableSave(on);
+	    		    }else {
+	    		    	menu.setEnabled(false);
+	    		    	System.out.println("Byeee");//controller.enableSave(off);
+	    		    }
+	    	    }
+	    	    if (source == volatileOption) {
+	    		    if (e.getStateChange() == ItemEvent.SELECTED) {
+	    		    	System.out.println("Hiiiii");//
+	    		    	stableOption.setSelected(false);
+	    		    }else {
+	    		    	if (stableOption.isSelected()==false) {
+	    		    		volatileOption.setSelected(true);
+	    		    	}
+	    		    }
+	    	    }
+	    	    if (source == stableOption) {
+	    		    if (e.getStateChange() == ItemEvent.SELECTED) {
+	    		    	System.out.println("Hiiiii");
+	    		    	volatileOption.setSelected(false);
+	    		    }else {
+	    		    	if (volatileOption.isSelected()==false) {
+		    		    	stableOption.setSelected(true);
+	    		    	}
+	    		    }
+	    	    }
+	    	}
+	      };
+
+	    strategyEnabler = new JCheckBox("Enable auto save");
+	    strategyEnabler.setMnemonic(KeyEvent.VK_C); 
+	    strategyEnabler.setSelected(false);
+	    add(strategyEnabler);
+	    strategyEnabler.addItemListener(itemListener);
+
+	    bar = new JMenuBar();
+	    menu = new JMenu("Save Options");
+	    menu.setMnemonic(KeyEvent.VK_O);
+	    volatileOption = new JRadioButtonMenuItem("Volatile");
+	    volatileOption.addItemListener(itemListener);
+	    menu.add(volatileOption);
+	    stableOption = new JRadioButtonMenuItem("Stable");
+	    stableOption.addItemListener(itemListener);
+	    menu.add(stableOption);
+	    menu.setEnabled(false);
+	    bar.add(menu);
+	    add(bar);
+	  //  add(menu);
+
 		//text area 
 		field = new JTextArea(80,80);
-		add(field);
+		sp = new JScrollPane(field);
+		sp.setPreferredSize(new Dimension(800, 750));
+		add(sp);
 
 	}	
-		
+
+	
 	private class ChapterAction implements ActionListener{
 
 		public void actionPerformed(ActionEvent e) {
