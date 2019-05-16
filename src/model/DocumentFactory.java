@@ -5,12 +5,12 @@ import java.util.Date;
 
 public class DocumentFactory {
 	
-	String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-	Article article = new Article();
-	Report report = new Report();
-	Book book = new Book();
-	Letter letter = new Letter();
-	Empty empty = new Empty();
+	private String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+	private Article article = new Article();
+	private Report report = new Report();
+	private Book book = new Book();
+	private Letter letter = new Letter();
+	private Empty empty = new Empty();
 
 	public Document factoryMethod(String type){
 		if (type.equals("article")){

@@ -6,33 +6,45 @@
 package controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 
+import model.ChangeVersionsStrategyCommand;
+import model.Command;
+import model.DisableVersionsManagementCommand;
 import model.Document;
 import model.DocumentFactory;
-import model.Invoker;
+import model.EnableVersionsManagementCommand;
+import model.LoadCommand;
+import model.RollbackToPreviousVersionCommand;
+import model.SaveCommand;
 import model.VersionsStrategy;
 import model.VersionsStrategyFactory;
 
 public class Controller {
-	Document document;
-	DocumentFactory factory;
-	Invoker invoker;
-	String fileName;
-	String path;
-	String strategyVersion;
-	VersionsStrategy strategy;
-	VersionsStrategyFactory strategyFactory;
+	private Document document;
+	private DocumentFactory factory;
+	private String fileName;
+	private String path;
+	private String strategyVersion;
+	private VersionsStrategy strategy;
+	private VersionsStrategyFactory strategyFactory;
+	private EnableVersionsManagementCommand enableVersions;
+	private DisableVersionsManagementCommand disableVersions;
+	private ChangeVersionsStrategyCommand changeStrategy;
+	private int rollbackNum;
+	
 	public Controller(){
 		document = new Document();
 		factory = new DocumentFactory();
 	}
 	
 	//Constructor for save & load (Invoker)
-	public Controller(Document document2, DocumentFactory factory2, String fileName2, String path2) {
+	public Controller(Document document2, DocumentFactory factory2, String fileName2, String path2, String strategyVersion) {
 		fileName=fileName2;
 		path=path2;
 		document=document2;
 		factory=factory2;
+		this.strategyVersion=strategyVersion;
 	}
 
 	//Setters
@@ -114,7 +126,24 @@ public class Controller {
 
 	//Get copy of controller to access a clone of all fields
 	public Controller getController(){
-		return new Controller(this.document,this.factory,this.fileName,this.path);
+		return new Controller(this.document,this.factory,this.fileName,this.path,this.strategyVersion);
+	}
+	
+	private HashMap<String, Command> commandsMap = new HashMap<String, Command>();
+
+	public void commands() {
+		SaveCommand save = new SaveCommand(document,fileName,path);
+		commandsMap.put("save", save);
+		LoadCommand load = new LoadCommand(getController());
+		commandsMap.put("load", load);
+		enableVersions = new EnableVersionsManagementCommand(strategyVersion);
+		commandsMap.put("enableVersions", enableVersions);
+		disableVersions = new DisableVersionsManagementCommand(strategy);
+		commandsMap.put("disableVersions", disableVersions);
+		changeStrategy = new ChangeVersionsStrategyCommand(strategy, strategyVersion);
+		commandsMap.put("changeStrategy", changeStrategy);
+		RollbackToPreviousVersionCommand rollback = new RollbackToPreviousVersionCommand(strategy, rollbackNum);
+		commandsMap.put("rollback", rollback);
 	}
 	
 	//Prints for tests
@@ -125,23 +154,71 @@ public class Controller {
 	public void test() {
 		document.test();
 	}
-
-	//Commands (Save & Load)
-	public void save() throws IOException {
-		invoker = new Invoker(getController());
-		invoker.issueCommand("save");
+	
+	public void issueCommand(String commandKey) throws IOException {
+		commandsMap.get(commandKey).execute();
 	}
 
+	//Commands
+	public void save() throws IOException {
+		commands();
+		issueCommand("save");
+	}
 
 	public void load() throws IOException {
-		invoker = new Invoker(getController());
-		invoker.issueCommand("load");
-		
+		commands();
+		issueCommand("load");
 	}
 	
-	public void setStrategy(String strategyVersion) {
-		strategyFactory = new VersionsStrategyFactory(strategyVersion);
-		strategy = strategyFactory.createStrategy();
-		strategy.putVersion(document);
+	public void EnableVersions() throws IOException {
+		commands();
+		issueCommand("enableVersions");
+		setStrategy(enableVersions.getStrategy());
 	}
+	
+	public void DisableVersions() throws IOException {
+		commands();
+		issueCommand("disableVersions");
+		setVersionID(0);
+	}
+	
+	public void ChangeVersions() throws IOException {//TODO
+		commands();
+		issueCommand("changeStrategy");
+		setStrategy(changeStrategy.getStrategy());
+	}
+
+	public void RollbackToPrevious() throws IOException {
+		commands();
+		issueCommand("rollback");
+		document = strategy.getVersion();
+	}
+
+	//commands end here
+	
+	public void setRollback(int num) {
+		rollbackNum=num;
+	}
+	
+	public void setStrategyType(String strategyVersion) {
+		this.strategyVersion = strategyVersion;
+	}
+	
+	public void setStrategy(VersionsStrategy strategy) {
+		this.strategy = strategy;
+	}
+	
+	public String getStrategyType() {
+		return strategyVersion;
+	}
+
+	public VersionsStrategy getStrategy() {
+		return strategy;
+	}
+
+	
+	public Document getDocument() {
+		return document;
+	}
+	
 }

@@ -1,5 +1,6 @@
 package view;
 import controller.*;
+import model.Document;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -9,6 +10,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
@@ -19,9 +26,13 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class Gui extends JFrame{
 	
@@ -49,8 +60,16 @@ public class Gui extends JFrame{
 	private JCheckBox strategyEnabler;
 	private JMenuBar bar;
 	private JMenu menu;
+	private JMenuBar rollBackBar;
+	private JMenu rollbackMenu;
 	private JRadioButtonMenuItem volatileOption;
 	private JRadioButtonMenuItem stableOption;
+	private JRadioButtonMenuItem rollbackOptions;
+    private Timer timer;
+    private boolean activateListener; 
+    private int initiateOrChange;
+	private JButton RollBack;
+    
 	public Gui(){
 		super("Power Rangers LaTeX Editor");
 		
@@ -152,19 +171,42 @@ public class Gui extends JFrame{
 
 	    	    if (source == strategyEnabler) {
 	    		    if (e.getStateChange() == ItemEvent.SELECTED) {
-	    		    	controller.setStrategy("volatile");
+	    		    	activateListener=true;
 	    		    	menu.setEnabled(true);
 	    		    	volatileOption.setSelected(true);
-	    		    	System.out.println("Hiiiii"); //controller.enableSave(on);
+	    		    	try {
+							controller.EnableVersions();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
 	    		    }else {
+	    		    	System.out.println("Save deactivated beep bopp");//
+	    		    	activateListener=false;
+	    		    	try {
+							controller.DisableVersions();
+							initiateOrChange=0;
+							
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
 	    		    	menu.setEnabled(false);
-	    		    	System.out.println("Byeee");//controller.enableSave(off);
 	    		    }
 	    	    }
 	    	    if (source == volatileOption) {
 	    		    if (e.getStateChange() == ItemEvent.SELECTED) {
-	    		    	System.out.println("Hiiiii");//
-	    		    	stableOption.setSelected(false);
+	    		    	if(initiateOrChange>0) {
+	    		    		try {
+								controller.ChangeVersions();
+			    		    	controller.DisableVersions();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+	    		    	}
+	    		    	System.out.println("Volatile activated");//
+	    		    	controller.setStrategyType("volatile");
+
+	    		    		initiateOrChange++;
+	    		    		stableOption.setSelected(false);
 	    		    }else {
 	    		    	if (stableOption.isSelected()==false) {
 	    		    		volatileOption.setSelected(true);
@@ -172,17 +214,30 @@ public class Gui extends JFrame{
 	    		    }
 	    	    }
 	    	    if (source == stableOption) {
-	    		    if (e.getStateChange() == ItemEvent.SELECTED) {
-	    		    	System.out.println("Hiiiii");
-	    		    	volatileOption.setSelected(false);
-	    		    }else {
-	    		    	if (volatileOption.isSelected()==false) {
-		    		    	stableOption.setSelected(true);
-	    		    	}
-	    		    }
+		    		    if (e.getStateChange() == ItemEvent.SELECTED) {
+		    		    	if(initiateOrChange>0) {
+		    		    		try {
+									controller.ChangeVersions();
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+		    		    	}
+		    		    	System.out.println("Stable activated");
+		    		    	controller.setStrategyType("stable");
+		    		    	initiateOrChange++; 	
+		    		    	volatileOption.setSelected(false);
+		    		    }else {
+		    		    	if (volatileOption.isSelected()==false) {
+		    		    		stableOption.setSelected(true);
+		    		    	}
+		    		    }
 	    	    }
 	    	}
-	      };
+	    };
+	    RollBack = new JButton("Rollback");
+	    RollBackAction rollbackAction = new RollBackAction();
+	    RollBack.addActionListener(rollbackAction);
+	    add(RollBack);
 
 	    strategyEnabler = new JCheckBox("Enable auto save");
 	    strategyEnabler.setMnemonic(KeyEvent.VK_C); 
@@ -202,17 +257,110 @@ public class Gui extends JFrame{
 	    menu.setEnabled(false);
 	    bar.add(menu);
 	    add(bar);
-	  //  add(menu);
-
+	  //  add(menu);//cute menu didn't exactly work right
+		/*rollBackBar = new JMenuBar();
+		rollbackMenu= new JMenu("Rollback");
+		rollbackMenu.setMnemonic(KeyEvent.VK_R);
+		rollbackMenu.setEnabled(true);
+		rollBackBar.add(rollbackMenu);
+		add(rollBackBar);
+	    //rollbackOptions = new JRadioButtonMenuItem("Version " + x);*/
 		//text area 
 		field = new JTextArea(80,80);
 		sp = new JScrollPane(field);
-		sp.setPreferredSize(new Dimension(800, 750));
+		sp.setPreferredSize(new Dimension(850, 800));
 		add(sp);
+		DeferredDocumentListener listener = new DeferredDocumentListener(1000, new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	            	if(activateListener) {
+	            		controller.setContents(field.getText());
+	            		controller.setVersionID(controller.getVersionID()+1);
+	            		//final JButton button1 = new JButton("Version " + controller.getVersionID());
+	            		//int id = controller.getVersionID();
+	            		controller.getStrategy().putVersion(controller.getDocument());
+	            		//button1 = new JRadioButtonMenuItem("Version " + controller.getVersionID()); //Dynamic rollback with a couple issues.	            		
+	            		//button1.addActionListener(new ActionListener() {
+/*
+	                        public void actionPerformed(ActionEvent e) {
+	                        	controller.setContents(controller.getStrategy().getEntireHistory().get(id).getContents());
+	                        	controller.setVersionID(controller.getStrategy().getEntireHistory().get(id).getVersionID());
+	                        	field.setText(controller.getContents());
+	                        	controller.setVersionID(id);
+	                        	int size =controller.getStrategy().getEntireHistory().size();
+	                        	int i;
+	                        	for(i=id; i<size;i++) {
+	                        		controller.getStrategy().removeDocument();
+		                        	rollbackMenu.remove(id);
+	                        	}
+	                        	rollbackMenu.remove(id-1);
+	                        	controller.setVersionID(id-1);
+	                        }
+	                    });*/
+	            		//rollbackMenu.add(button1);
+	                	timer.stop();
+	            	}
+	            }
+        }, true);
+		
+		
+        field.getDocument().addDocumentListener(listener);
+        field.getDocument().addDocumentListener(listener);
 
 	}	
+    public class DeferredDocumentListener implements DocumentListener {
+
+
+        public DeferredDocumentListener(int timeOut, ActionListener listener, boolean repeats) {
+            timer = new Timer(timeOut, listener);
+            timer.setRepeats(repeats);
+        }
+
+        public void insertUpdate(DocumentEvent e) {
+            timer.start();
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            timer.start();
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            timer.start();
+        }
+
+
+    }
 
 	
+	private class RollBackAction implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			if(activateListener) {
+				String rollbackNumber = JOptionPane.showInputDialog("Enter the version number you want to rollback to (1 - " + controller.getVersionID() +")");
+		        try {
+		            int rollbacknum = Integer.parseInt(rollbackNumber)-1;
+					if( rollbacknum<0 || rollbacknum>controller.getVersionID()) {
+						JOptionPane.showMessageDialog(null, "Version number was incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
+					}else {
+						controller.setRollback(rollbacknum);
+						try {
+							controller.RollbackToPrevious();
+							field.setText(controller.getContents());
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+		        } catch (NumberFormatException e1) {
+					JOptionPane.showMessageDialog(null, "Version number must be a NUMBER!", "Error", JOptionPane.ERROR_MESSAGE);
+		        }
+			}else {
+				JOptionPane.showMessageDialog(null, "Can't rollback if autosave is disabled!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+						
+		}
+	}
+	
+
+    
 	private class ChapterAction implements ActionListener{
 
 		public void actionPerformed(ActionEvent e) {
@@ -502,7 +650,7 @@ public class Gui extends JFrame{
 	public static void main(String[] args) {
 		Gui g = new Gui();
 		g.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		g.setSize(900,900);
+		g.setSize(950,925);
 		g.setVisible(true);
 	}
 }

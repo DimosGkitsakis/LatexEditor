@@ -5,7 +5,7 @@ import controller.Controller;
 
 public class LoadCommand implements Command{
 	private Load load = new Load();
-	Controller controller;
+	private Controller controller;
 	public LoadCommand(Controller controller) {
 		this.controller=controller;
 	}

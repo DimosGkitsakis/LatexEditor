@@ -6,12 +6,17 @@ import controller.Controller;
 
 public class SaveCommand implements Command{
 	private Save save = new Save();
-	Controller controller;
-	public SaveCommand(Controller controller) {
-		this.controller=controller;
+	private Document document;
+	private String fileName;
+	private String path;
+
+	public SaveCommand(Document document, String fileName, String path) {
+		this.document=document;
+		this.fileName=fileName;
+		this.path=path;
 	}
 	public void execute() throws IOException{
-		save.saveFile(controller.getFileName(),controller.getFilePath(),controller.getContents());
-		save.saveInfo(controller.getAuthor(),controller.getDate(),controller.getVersionID(),controller.getCopyright(),controller.getFileName(),controller.getFilePath());
+		save.saveFile(fileName,path,document.getContents());
+		save.saveInfo(document.getAuthor(),document.getDate(),document.getVersionID(),document.getCopyright(),fileName,path);
 	}
 }
