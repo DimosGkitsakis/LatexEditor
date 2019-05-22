@@ -59,7 +59,7 @@ public class Load {
 		    //Set author, date, versionID, copyright from the hidden file
 		    controller.setAuthor(documentComponents[0]);
 		    controller.setDate((documentComponents[2]));
-		    controller.setVersionID(Integer.parseInt(documentComponents[4]));
+		    controller.setVersionID(0);
 		    controller.setCopyright(documentComponents[6]);
 		    sc.close();
 		}

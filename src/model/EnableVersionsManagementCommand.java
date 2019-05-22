@@ -2,8 +2,6 @@ package model;
 
 import java.io.IOException;
 
-import controller.Controller;
-
 public class EnableVersionsManagementCommand implements Command{
 	private VersionsStrategy strategy;
 	private String strategyType;

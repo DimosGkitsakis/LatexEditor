@@ -2,8 +2,6 @@ package model;
 
 import java.io.IOException;
 
-import controller.Controller;
-
 public class SaveCommand implements Command{
 	private Save save = new Save();
 	private Document document;

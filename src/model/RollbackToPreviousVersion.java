@@ -12,7 +12,6 @@ public class RollbackToPreviousVersion {
 	public void RollItBackBaby() {
 		int size = strategy.getEntireHistory().size()-1;
     	for(int i=rollbackNum; i<size;i++) {
-    		System.out.println(j);
     		strategy.removeDocument();
     		j++;
     	}

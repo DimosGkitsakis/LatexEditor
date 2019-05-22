@@ -5,12 +5,12 @@ import java.io.IOException;
 public class ChangeVersionsStrategyCommand implements Command{
 
 	private VersionsStrategy strategy;
-	private ChangeVersions changeVersions;
+	private ChangeVersionsStrategy changeVersions;
 	private String strategyVersion;
 	public ChangeVersionsStrategyCommand(VersionsStrategy strategy, String strategyVersion) {
 		this.strategy=strategy;
 		this.strategyVersion=strategyVersion;
-		changeVersions = new ChangeVersions(strategy,strategyVersion);
+		changeVersions = new ChangeVersionsStrategy(strategy,strategyVersion);
 	}
 
 	public void execute() throws IOException {

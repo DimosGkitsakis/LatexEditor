@@ -18,7 +18,6 @@ import model.LoadCommand;
 import model.RollbackToPreviousVersionCommand;
 import model.SaveCommand;
 import model.VersionsStrategy;
-import model.VersionsStrategyFactory;
 
 public class Controller {
 	private Document document;
@@ -27,18 +26,20 @@ public class Controller {
 	private String path;
 	private String strategyVersion;
 	private VersionsStrategy strategy;
-	private VersionsStrategyFactory strategyFactory;
 	private EnableVersionsManagementCommand enableVersions;
 	private DisableVersionsManagementCommand disableVersions;
 	private ChangeVersionsStrategyCommand changeStrategy;
 	private int rollbackNum;
+	private HashMap<String, Command> commandsMap;
+
 	
 	public Controller(){
 		document = new Document();
 		factory = new DocumentFactory();
+		commandsMap = new HashMap<String, Command>();
 	}
 	
-	//Constructor for save & load (Invoker)
+	//Constructor for load
 	public Controller(Document document2, DocumentFactory factory2, String fileName2, String path2, String strategyVersion) {
 		fileName=fileName2;
 		path=path2;
@@ -78,9 +79,24 @@ public class Controller {
 
 	public void setVersionID(int parseInt) {
 		document.setVersionID(parseInt);
-		
 	}	
 	
+	public void setRollback(int num) {
+		rollbackNum=num;
+	}
+	
+	public void setStrategyType(String strategyVersion) {
+		this.strategyVersion = strategyVersion;
+	}
+	
+	public void setStrategy(VersionsStrategy strategy) {
+		this.strategy = strategy;
+	}
+	
+	public String getStrategyType() {
+		return strategyVersion;
+	}
+
 	//Set up a new Document
 	public void factoryMethod() {
 		document = factory.factoryMethod(document.getType());
@@ -119,6 +135,14 @@ public class Controller {
 		return document.getCopyright();
 	}
 	
+	public VersionsStrategy getStrategy() {
+		return strategy;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+	
 	//Add contents at the end
 	public void addContents(String st) {
 		document.addContents(st);
@@ -129,9 +153,9 @@ public class Controller {
 		return new Controller(this.document,this.factory,this.fileName,this.path,this.strategyVersion);
 	}
 	
-	private HashMap<String, Command> commandsMap = new HashMap<String, Command>();
-
-	public void commands() {
+	//Update all commands with the correct-updated fields needed for each one
+	public void updateCommands() {
+		commandsMap.clear();
 		SaveCommand save = new SaveCommand(document,fileName,path);
 		commandsMap.put("save", save);
 		LoadCommand load = new LoadCommand(getController());
@@ -146,79 +170,49 @@ public class Controller {
 		commandsMap.put("rollback", rollback);
 	}
 	
-	//Prints for tests
-	public void print() {
-		document.printContents();
-	}
-	
-	public void test() {
-		document.test();
-	}
-	
+	//Execute a command using it's key
 	public void issueCommand(String commandKey) throws IOException {
 		commandsMap.get(commandKey).execute();
 	}
 
+	//Add new commands for extensibility
+	public void addCommand(String commandKey, Command command){
+		commandsMap.put(commandKey, command);
+	}
+		
 	//Commands
 	public void save() throws IOException {
-		commands();
+		updateCommands();
 		issueCommand("save");
 	}
 
 	public void load() throws IOException {
-		commands();
+		updateCommands();
 		issueCommand("load");
 	}
 	
-	public void EnableVersions() throws IOException {
-		commands();
+	public void enableVersions() throws IOException {
+		updateCommands();
 		issueCommand("enableVersions");
 		setStrategy(enableVersions.getStrategy());
 	}
 	
-	public void DisableVersions() throws IOException {
-		commands();
+	public void disableVersions() throws IOException {
+		updateCommands();
 		issueCommand("disableVersions");
 		setVersionID(0);
 	}
 	
-	public void ChangeVersions() throws IOException {//TODO
-		commands();
+	public void changeVersions() throws IOException {
+		updateCommands();
 		issueCommand("changeStrategy");
 		setStrategy(changeStrategy.getStrategy());
 	}
 
-	public void RollbackToPrevious() throws IOException {
-		commands();
+	public void rollbackToPrevious() throws IOException {
+		updateCommands();
 		issueCommand("rollback");
 		document = strategy.getVersion();
-	}
-
-	//commands end here
-	
-	public void setRollback(int num) {
-		rollbackNum=num;
-	}
-	
-	public void setStrategyType(String strategyVersion) {
-		this.strategyVersion = strategyVersion;
-	}
-	
-	public void setStrategy(VersionsStrategy strategy) {
-		this.strategy = strategy;
-	}
-	
-	public String getStrategyType() {
-		return strategyVersion;
-	}
-
-	public VersionsStrategy getStrategy() {
-		return strategy;
-	}
-
-	
-	public Document getDocument() {
-		return document;
 	}
 	
 }
