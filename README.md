@@ -10,5 +10,6 @@ Other necessary libraries are included in the project as .jar files.
 
 ## Usage
 Import the project's file in Eclipse.
-Run the Gui.
+Run the Gui.java class.
+
 The GUI of the application will pop up. There, you can use it to create a new document, load an existing one, change it and save it.
